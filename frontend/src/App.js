@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import RecipeForm from './RecipeForm';
+import RecipeForm from './components/RecipeForm';
+import RecipeCard from './components/RecipeCard';
 
 function App() {
   const [recipes, setRecipes] = useState([]);
@@ -8,10 +9,16 @@ function App() {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const fetchRecipes = async () => {
+    setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/recipes');
+      let url = 'http://localhost:5000/recipes';
+      if (selectedCategory) {
+        url += `?category=${encodeURIComponent(selectedCategory)}`;
+      }
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -27,48 +34,26 @@ function App() {
 
   useEffect(() => {
     fetchRecipes();
-  }, []);
+  }, [selectedCategory]);
 
-  const handleRecipeAdded = (updatedOrNewRecipe) => {
-    if (updatedOrNewRecipe.id && recipes.some(r => r.id === updatedOrNewRecipe.id)) {
-      setRecipes((prevRecipes) =>
-        prevRecipes.map((recipe) =>
-          recipe.id === updatedOrNewRecipe.id ? updatedOrNewRecipe : recipe
-        )
-      );
-    } else {
-      setRecipes((prevRecipes) => [...prevRecipes, updatedOrNewRecipe]);
-    }
+  const handleRecipeAdded = (newRecipe) => {
+    fetchRecipes();
     setShowForm(false);
     setEditingRecipe(null);
   };
 
-  const handleDeleteRecipe = async (id) => {
-    if (!window.confirm('¿Estás seguro de que quieres eliminar esta receta?')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:5000/recipes/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-      }
-
-      setRecipes((prevRecipes) => prevRecipes.filter(recipe => recipe.id !== id));
-      console.log(`Receta con ID ${id} eliminada.`);
-
-    } catch (error) {
-      console.error("Error al eliminar receta:", error);
-      alert(`Error al eliminar la receta: ${error.message}`);
-    }
+  const handleRecipeUpdated = (updatedRecipe) => {
+    fetchRecipes();
+    setShowForm(false);
+    setEditingRecipe(null);
   };
 
-  const handleEditClick = (recipeToEdit) => {
-    setEditingRecipe(recipeToEdit);
+  const handleRecipeDeleted = () => {
+    fetchRecipes();
+  };
+
+  const handleEditClick = (recipe) => {
+    setEditingRecipe(recipe);
     setShowForm(true);
   };
 
@@ -77,67 +62,84 @@ function App() {
     setEditingRecipe(null);
   };
 
-  if (loading) {
-    return <div className="App">Cargando recetas...</div>;
-  }
-
-  if (error) {
-    return <div className="App" style={{ color: 'red' }}>Error: {error}</div>;
-  }
-
   return (
     <div className="App">
       <header className="App-header">
-        <h1 className="main-app-title">Mis Recetas</h1> {/* Agregué la clase aquí */}
+        <img src="/melove-logo.png" alt="Melove Recetas Logo" className="app-logo" />
+
         <button
           onClick={() => {
             setShowForm(true);
             setEditingRecipe(null);
+            setSelectedCategory(null);
           }}
         >
           Añadir Nueva Receta
         </button>
+
+        <div className="categories-bar">
+          <span
+            className={`category-item ${selectedCategory === null ? 'active' : ''}`}
+            onClick={() => setSelectedCategory(null)}
+          >
+            Todas
+          </span>
+          <span
+            className={`category-item ${selectedCategory === 'Postres' ? 'active' : ''}`}
+            onClick={() => setSelectedCategory('Postres')}
+          >
+            Postres
+          </span>
+          <span
+            className={`category-item ${selectedCategory === 'Platos Fuertes' ? 'active' : ''}`}
+            onClick={() => setSelectedCategory('Platos Fuertes')}
+          >
+            Platos Fuertes
+          </span>
+          <span
+            className={`category-item ${selectedCategory === 'Desayunos' ? 'active' : ''}`}
+            onClick={() => setSelectedCategory('Desayunos')}
+          >
+            Desayunos
+          </span>
+          <span
+            className={`category-item ${selectedCategory === 'Ensaladas' ? 'active' : ''}`}
+            onClick={() => setSelectedCategory('Ensaladas')}
+          >
+            Ensaladas
+          </span>
+          <span
+            className={`category-item ${selectedCategory === 'Bebidas' ? 'active' : ''}`}
+            onClick={() => setSelectedCategory('Bebidas')}
+          >
+            Bebidas
+          </span>
+        </div>
       </header>
+
       <main>
-        {showForm ? (
-          <RecipeForm onRecipeAdded={handleRecipeAdded} onCancel={handleCancelForm} initialRecipe={editingRecipe} />
-        ) : (
-          recipes.length === 0 ? (
-            <p>No hay recetas disponibles. ¡Crea una!</p>
-          ) : (
-            <> {/* Fragmento para incluir un título de sección */}
-              <h2 className="main-section-title">Recetas Destacadas</h2> {/* Nuevo título de sección */}
-              <div className="recipes-list">
-                {recipes.map(recipe => (
-                  <div key={recipe.id} className="recipe-card"> {/* Eliminé el style en línea */}
-                    {recipe.image_url && <img src={recipe.image_url} alt={recipe.title} />} {/* Eliminé el style en línea */}
-                    <h2>{recipe.title}</h2>
-                    <p><strong>Categoría:</strong> {recipe.category}</p>
-                    <p>{recipe.description}</p>
-                    <h3>Ingredientes:</h3>
-                    <p>{recipe.ingredients}</p>
-                    <h3>Instrucciones:</h3>
-                    <p>{recipe.instructions}</p>
-                    <div className="button-group"> {/* Agregué la clase aquí y eliminé el style en línea */}
-                      <button
-                        onClick={() => handleEditClick(recipe)}
-                        className="edit-button" // Agregué la clase aquí
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => handleDeleteRecipe(recipe.id)}
-                        className="delete-button" // Agregué la clase aquí
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )
+        {showForm && (
+          <RecipeForm
+            recipe={editingRecipe}
+            onRecipeAdded={handleRecipeAdded}
+            onRecipeUpdated={handleRecipeUpdated}
+            onCancel={handleCancelForm}
+          />
         )}
+        <h2 className="main-section-title">Recetas Destacadas</h2>
+        {loading && <p>Cargando recetas...</p>}
+        {error && <p className="submit-status error">{error}</p>}
+        {!loading && !error && recipes.length === 0 && <p>No hay recetas disponibles. ¡Añade una!</p>}
+        <div className="recipes-list">
+          {!loading && !error && recipes.length > 0 && recipes.map(recipe => (
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onEdit={handleEditClick}
+              onDelete={handleRecipeDeleted}
+            />
+          ))}
+        </div>
       </main>
     </div>
   );

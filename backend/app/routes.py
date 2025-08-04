@@ -1,79 +1,63 @@
-# backend/app/routes.py
-from flask import Blueprint, jsonify, request
-from app import db # Importamos db desde __init__.py
-from app.models import Recipe # Importamos el modelo Recipe que creamos
+from flask import Blueprint, request, jsonify
+from app import db
+from app.models import Recipe
 
 main = Blueprint('main', __name__)
 
-# Ruta de prueba para verificar que el servidor funciona
-@main.route('/')
-def index():
-    return jsonify({"message": "¡Bienvenido a la API de Recetas!"})
-
-# Ruta para obtener todas las recetas
 @main.route('/recipes', methods=['GET'])
-def get_all_recipes():
-    recipes = Recipe.query.all()
-    # Convertir la lista de objetos Recipe a una lista de diccionarios
-    return jsonify([recipe.to_dict() for recipe in recipes])
+def get_recipes():
+    # Obtener el parámetro 'category' de la URL si existe
+    category = request.args.get('category')
 
-# Ruta para crear una nueva receta
+    if category:
+        # Si se proporciona una categoría, filtra las recetas por esa categoría
+        recipes = Recipe.query.filter_by(category=category).all()
+    else:
+        # Si no se proporciona categoría, devuelve todas las recetas
+        recipes = Recipe.query.all()
+
+    recipes_data = [{
+        'id': recipe.id,
+        'title': recipe.title,
+        'description': recipe.description,
+        'ingredients': recipe.ingredients,
+        'instructions': recipe.instructions,
+        'category': recipe.category,
+        'image_url': recipe.image_url
+    } for recipe in recipes]
+    return jsonify(recipes_data)
+
 @main.route('/recipes', methods=['POST'])
-def create_recipe():
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "No data provided"}), 400
-
-    # Validación básica de datos
-    if not all(key in data for key in ['title', 'description', 'ingredients', 'instructions']):
-        return jsonify({"error": "Missing required fields"}), 400
-
+def add_recipe():
+    data = request.json
     new_recipe = Recipe(
         title=data['title'],
         description=data['description'],
         ingredients=data['ingredients'],
         instructions=data['instructions'],
-        category=data.get('category'), # .get() permite que sea opcional
+        category=data.get('category', 'General'),
         image_url=data.get('image_url')
     )
-
     db.session.add(new_recipe)
     db.session.commit()
+    return jsonify(new_recipe.to_dict()), 201
 
-    return jsonify(new_recipe.to_dict()), 201 # 201 Created
-
-# Ruta para obtener una receta por ID
-@main.route('/recipes/<int:recipe_id>', methods=['GET'])
-def get_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
-    return jsonify(recipe.to_dict())
-
-# Ruta para actualizar una receta
 @main.route('/recipes/<int:recipe_id>', methods=['PUT'])
 def update_recipe(recipe_id):
     recipe = Recipe.query.get_or_404(recipe_id)
-    data = request.get_json()
-
-    if not data:
-        return jsonify({"error": "No data provided"}), 400
-
+    data = request.json
     recipe.title = data.get('title', recipe.title)
     recipe.description = data.get('description', recipe.description)
     recipe.ingredients = data.get('ingredients', recipe.ingredients)
     recipe.instructions = data.get('instructions', recipe.instructions)
     recipe.category = data.get('category', recipe.category)
     recipe.image_url = data.get('image_url', recipe.image_url)
-
     db.session.commit()
     return jsonify(recipe.to_dict())
 
-# Ruta para eliminar una receta
 @main.route('/recipes/<int:recipe_id>', methods=['DELETE'])
 def delete_recipe(recipe_id):
-    recipe = db.session.get(Recipe, recipe_id) # Usar db.session.get para Python 3.9+
-    if recipe is None:
-        return jsonify({"error": "Recipe not found"}), 404
-
+    recipe = Recipe.query.get_or_404(recipe_id)
     db.session.delete(recipe)
     db.session.commit()
-    return jsonify({"message": "Recipe deleted successfully"}), 200
+    return '', 204
