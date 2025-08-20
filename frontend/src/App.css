@@ -466,3 +466,94 @@ body {
     width: 100%;
   }
 }
+/* Estilos para la página de detalle de una receta */
+.recipe-detail-container {
+  background-color: var(--text-light);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 40px;
+  margin: 30px auto;
+  max-width: 900px;
+  box-shadow: 0 8px 20px var(--shadow-light);
+  text-align: left;
+}
+
+.recipe-detail-header {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.recipe-detail-image {
+  width: 350px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.recipe-detail-info {
+  flex-grow: 1;
+}
+
+.recipe-detail-info h1 {
+  font-size: 3em;
+  color: var(--dark-green);
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.recipe-detail-description {
+  font-size: 1.2em;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+.recipe-detail-category {
+  font-size: 1.1em;
+  font-style: italic;
+  color: var(--primary-green);
+  margin-top: 20px;
+}
+
+.recipe-detail-content h2 {
+  font-size: 2em;
+  color: var(--primary-green);
+  margin-top: 30px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--primary-green);
+  padding-bottom: 5px;
+}
+
+.recipe-detail-content p {
+  font-size: 1.1em;
+  line-height: 1.8;
+}
+
+/* Adaptaciones para dispositivos móviles */
+@media (max-width: 768px) {
+  .recipe-detail-container {
+      padding: 20px;
+  }
+
+  .recipe-detail-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+  }
+
+  .recipe-detail-image {
+      width: 100%;
+      height: auto;
+  }
+
+  .recipe-detail-info h1 {
+      font-size: 2em;
+  }
+
+  .recipe-detail-info p {
+      font-size: 1em;
+  }
+}

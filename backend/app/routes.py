@@ -27,6 +27,11 @@ def get_recipes():
     } for recipe in recipes]
     return jsonify(recipes_data)
 
+@main.route('/recipes/<int:recipe_id>', methods=['GET'])
+def get_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    return jsonify(recipe.to_dict())
+
 @main.route('/recipes', methods=['POST'])
 def add_recipe():
     data = request.json
