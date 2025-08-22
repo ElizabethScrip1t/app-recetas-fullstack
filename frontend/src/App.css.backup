@@ -1,0 +1,565 @@
+/* BACKUP DEL CSS ORIGINAL - NO MODIFICAR */
+/* Este archivo contiene la versión original del CSS antes de las mejoras visuales */
+
+/* frontend/src/App.css */
+
+/* Variables CSS para colores principales */
+:root {
+  --primary-green: #28a745; /* Verde principal para fondos y elementos clave */
+  --light-green: #e0f2f1;   /* Verde muy claro para fondos o bordes suaves */
+  --accent-green: #00bf8f;  /* Un verde más vibrante/cercano al cian para acentos */
+  --dark-green: #1a7d36;    /* Verde oscuro para hover o texto importante */
+  --text-dark: #333;       /* Color de texto oscuro */
+  --text-light: #fff;      /* Color de texto claro */
+  --border-color: #ddd;    /* Color de borde general */
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-strong: rgba(0, 0, 0, 0.2);
+
+  /* Nuevas variables o modificadas */
+  --accent-green-hover: #00a87a; /* Nuevo color para el hover del botón de editar */
+  --page-background: #eaf7ed; /* Nuevo color de fondo general, un verde muy claro */
+}
+
+/* Estilos generales del cuerpo y fuente */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--page-background);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+/* Contenedor principal de la aplicación */
+.App {
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Cabecera de la aplicación */
+.App-header {
+  background: linear-gradient(to right, var(--primary-green), var(--accent-green));
+  padding: 25px 30px;
+  color: var(--text-light);
+  border-radius: 12px;
+  margin-bottom: 40px;
+  box-shadow: 0 6px 12px var(--shadow-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Estilos para la IMAGEN del logo en el header */
+.app-logo {
+  height: 100px;
+  width: auto;
+  margin-right: 0;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  margin-bottom: 15px;
+}
+
+/* Estilos para el botón de Añadir Nueva Receta (en el header) */
+.App-header button {
+  background-color: var(--primary-green);
+  color: var(--text-light);
+  border: none;
+  padding: 14px 30px;
+  font-size: 1.2em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+  max-width: 300px;
+  width: 100%;
+}
+
+.App-header button:hover {
+  background-color: var(--dark-green);
+  transform: translateY(-2px);
+}
+
+/* Estilos para la barra de categorías en el header */
+.categories-bar {
+  width: 100%;
+  background-color: var(--dark-green);
+  border-radius: 8px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  flex-wrap: wrap;
+}
+
+.category-item {
+  color: var(--text-light);
+  font-size: 1.1em;
+  font-weight: bold;
+  padding: 8px 15px;
+  margin: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.category-item:hover {
+  background-color: var(--primary-green);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para la categoría activa */
+.category-item.active {
+  background-color: var(--primary-green);
+  color: var(--text-light);
+  border-color: var(--text-light);
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.category-item.active:hover {
+  background-color: var(--dark-green);
+  transform: scale(1.08);
+}
+
+/* Título de la sección de recetas destacadas */
+.main-section-title {
+  font-size: 2.8em;
+  color: var(--primary-green);
+  margin-bottom: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-align: left;
+  padding-left: 10px;
+}
+
+/* Estilos de la lista de recetas (contenedor) */
+.recipes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  padding: 25px;
+  background-color: var(--text-light);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px var(--shadow-light);
+  margin-top: 20px;
+}
+
+/* Estilos de cada tarjeta de receta */
+.recipe-card {
+  background-color: var(--text-light);
+  border: 2px solid var(--dark-green);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+.recipe-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px var(--shadow-light);
+}
+
+.recipe-card h2 {
+  color: var(--dark-green);
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 2.2em;
+  font-weight: bold;
+}
+
+.recipe-card p {
+  line-height: 1.7;
+  margin-bottom: 10px;
+  font-size: 1em;
+  color: var(--text-dark);
+}
+
+.recipe-card h3 {
+  color: var(--primary-green);
+  margin-top: 15px;
+  margin-bottom: 8px;
+  font-size: 1.3em;
+  font-weight: bold;
+  border-bottom: 1px dashed var(--light-green);
+  padding-bottom: 5px;
+}
+
+/* Contenedor de imagen y descripción dentro de la tarjeta */
+.recipe-header-content {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  align-items: flex-start;
+}
+
+.recipe-header-content .recipe-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-header-content .recipe-description-area {
+    flex-grow: 1;
+}
+
+.recipe-description-area h2 {
+    font-size: 1.6em;
+    margin-bottom: 5px;
+}
+
+.recipe-description-area p {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+/* Contenedor de botones dentro de la tarjeta */
+.recipe-card .button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+  justify-content: flex-end;
+  padding-top: 15px;
+  border-top: 1px solid var(--light-green);
+}
+
+.recipe-card button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Colores específicos para botones de Editar y Eliminar */
+.recipe-card .edit-button {
+  background-color: var(--accent-green);
+  color: var(--text-light);
+}
+
+.recipe-card .edit-button:hover {
+  background-color: var(--accent-green-hover);
+  transform: translateY(-1px);
+}
+
+.recipe-card .delete-button {
+  background-color: #dc3545;
+  color: var(--text-light);
+}
+
+.recipe-card .delete-button:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Estilos del contenedor del formulario */
+.recipe-form-container {
+  background-color: var(--text-light);
+  border: 1px solid var(--light-green);
+  border-radius: 12px;
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 650px;
+  box-shadow: 0 8px 20px var(--shadow-light);
+  text-align: left;
+}
+
+.recipe-form-container h2 {
+  color: var(--dark-green);
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 2.5em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.recipe-form-container label {
+  display: block;
+  margin-bottom: 18px;
+  font-weight: bold;
+  color: var(--text-dark);
+  font-size: 1.1em;
+}
+
+.recipe-form-container input[type="text"],
+.recipe-form-container input[type="url"],
+.recipe-form-container textarea {
+  width: calc(100% - 20px);
+  padding: 12px;
+  margin-top: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1.05em;
+  box-sizing: border-box;
+}
+
+.recipe-form-container textarea {
+  min-height: 150px;
+}
+
+.recipe-form-container .button-group-form {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.recipe-form-container button {
+  padding: 14px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  flex-grow: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-form-container button[type="submit"] {
+  background-color: var(--primary-green);
+  color: var(--text-light);
+}
+
+.recipe-form-container button[type="submit"]:hover {
+  background-color: var(--dark-green);
+  transform: translateY(-1px);
+}
+
+.recipe-form-container button[type="button"] {
+  background-color: #6c757d;
+  color: var(--text-light);
+}
+
+.recipe-form-container button[type="button"]:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Estilos para mensajes de estado */
+.submit-status {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.submit-status.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.submit-status.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .App {
+    padding: 10px;
+  }
+  .App-header {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  .App-header button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 1em;
+  }
+  .app-logo {
+    height: 60px;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  .categories-bar {
+    justify-content: center;
+    padding: 8px 10px;
+  }
+  .category-item {
+    font-size: 0.9em;
+    padding: 6px 10px;
+    margin: 3px;
+  }
+  .main-section-title {
+    font-size: 2em;
+    text-align: center;
+    padding-left: 0;
+  }
+  .recipes-list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 15px;
+  }
+  .recipe-card {
+    padding: 15px;
+  }
+  .recipe-card h2 {
+    font-size: 1.8em;
+  }
+  .recipe-card h3 {
+    font-size: 1.1em;
+  }
+  .recipe-header-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .recipe-header-content .recipe-image {
+    width: 100%;
+    height: 200px;
+  }
+  .recipe-description-area {
+    text-align: center;
+  }
+  .recipe-description-area h2, .recipe-description-area p {
+    text-align: center;
+  }
+  .recipe-card h3 {
+    text-align: center;
+  }
+  .recipe-form-container {
+    padding: 20px;
+  }
+  .recipe-form-container h2 {
+    font-size: 2em;
+  }
+  .recipe-form-container label {
+    font-size: 1em;
+  }
+  .recipe-form-container input,
+  .recipe-form-container textarea {
+    padding: 10px;
+    font-size: 0.95em;
+  }
+  .recipe-form-container .button-group-form {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .recipe-form-container button {
+    width: 100%;
+  }
+}
+
+/* Estilos para la página de detalle de una receta */
+.recipe-detail-container {
+  background-color: var(--text-light);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 40px;
+  margin: 30px auto;
+  max-width: 900px;
+  box-shadow: 0 8px 20px var(--shadow-light);
+  text-align: left;
+}
+
+.recipe-detail-header {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.recipe-detail-image {
+  width: 350px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.recipe-detail-info {
+  flex-grow: 1;
+}
+
+.recipe-detail-info h1 {
+  font-size: 3em;
+  color: var(--dark-green);
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.recipe-detail-description {
+  font-size: 1.2em;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+.recipe-detail-category {
+  font-size: 1.1em;
+  font-style: italic;
+  color: var(--primary-green);
+  margin-top: 20px;
+}
+
+.recipe-detail-content h2 {
+  font-size: 2em;
+  color: var(--primary-green);
+  margin-top: 30px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--primary-green);
+  padding-bottom: 5px;
+}
+
+.recipe-detail-content p {
+  font-size: 1.1em;
+  line-height: 1.8;
+}
+
+/* Adaptaciones para dispositivos móviles */
+@media (max-width: 768px) {
+  .recipe-detail-container {
+      padding: 20px;
+  }
+
+  .recipe-detail-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+  }
+
+  .recipe-detail-image {
+      width: 100%;
+      height: auto;
+  }
+
+  .recipe-detail-info h1 {
+      font-size: 2em;
+  }
+
+  .recipe-detail-info p {
+      font-size: 1em;
+  }
+}
+
+/* FIN DEL BACKUP - VERSIÓN ORIGINAL COMPLETA */
